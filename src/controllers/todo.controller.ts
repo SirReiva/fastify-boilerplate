@@ -16,6 +16,11 @@ export class TodoController {
 	@Get('/:id', {
 		schema: {
 			tags: ['todo'],
+			security: [
+				{
+					Bearer: [''],
+				},
+			],
 			params: GetByIDTodoDTO,
 			response: {
 				200: TodoDTO,
@@ -33,6 +38,11 @@ export class TodoController {
 	@Get('/', {
 		schema: {
 			tags: ['todo'],
+			security: [
+				{
+					Bearer: [''],
+				},
+			],
 			querystring: PaginationDTO,
 			response: {
 				200: TodoArray,
@@ -46,6 +56,11 @@ export class TodoController {
 	@Post('/', {
 		schema: {
 			tags: ['todo'],
+			security: [
+				{
+					Bearer: [''],
+				},
+			],
 			body: CreateTodoDTO,
 			response: {
 				201: TodoDTO,

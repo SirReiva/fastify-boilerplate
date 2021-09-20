@@ -18,7 +18,7 @@ const swggerOptions: SwaggerOptions = {
 		securityDefinitions: {
 			Bearer: {
 				type: 'apiKey',
-				name: 'Bearer',
+				name: 'authorization',
 				in: 'header',
 			},
 		},

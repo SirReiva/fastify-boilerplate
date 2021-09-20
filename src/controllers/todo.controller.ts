@@ -1,27 +1,27 @@
-import { FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyRequest } from 'fastify';
+import uuid from 'uuid-random';
 import { Controller } from '../core/decorators/controller.decorator';
 import { Get, Post } from '../core/decorators/route.decorator';
 import { CreateTodoDTO, CreateTodoDTOType } from '../dto/create-todo.dto';
 import { GetByIDTodoDTO, GetByIdTodoDTOType } from '../dto/get-todo-by-id.dto';
-import uuid from 'uuid-random';
-import createError from 'fastify-error';
 import { PaginationDTO, PaginationDTOType } from '../dto/pagination.dto';
 import { TodoArray, TodoDTO } from '../dto/todo.dto';
+import { NotFoundError } from '../errors';
+import { JWTGuard } from '../middlewares/jwt.middleware';
 
-const NotFoundError = createError('404', 'Not Found', 404);
 const TODOS_LIST: { title: string; done: boolean; id: string }[] = [];
 
 @Controller('todos')
 export class TodoController {
 	@Get('/:id', {
 		schema: {
-			//@ts-ignore
 			tags: ['todo'],
 			params: GetByIDTodoDTO,
 			response: {
 				200: TodoDTO,
 			},
 		},
+		preHandler: JWTGuard,
 	})
 	getById(req: FastifyRequest<{ Params: GetByIdTodoDTOType }>) {
 		const todo = TODOS_LIST.find(todo => todo.id === req.params.id);
@@ -32,32 +32,29 @@ export class TodoController {
 
 	@Get('/', {
 		schema: {
-			//@ts-ignore
 			tags: ['todo'],
 			querystring: PaginationDTO,
 			response: {
 				200: TodoArray,
 			},
 		},
+		preHandler: JWTGuard,
 	})
 	list(req: FastifyRequest<{ Querystring: PaginationDTOType }>) {
 		return TODOS_LIST.slice(req.query.skip, req.query.skip + req.query.limit);
 	}
 	@Post('/', {
 		schema: {
-			//@ts-ignore
 			tags: ['todo'],
 			body: CreateTodoDTO,
 			response: {
 				201: TodoDTO,
 			},
 		},
+		preHandler: JWTGuard,
+		statusCode: 201,
 	})
-	createTodo(
-		req: FastifyRequest<{ Body: CreateTodoDTOType }>,
-		reply: FastifyReply
-	) {
-		reply.status(201);
+	createTodo(req: FastifyRequest<{ Body: CreateTodoDTOType }>) {
 		const todo = {
 			id: uuid(),
 			...req.body,

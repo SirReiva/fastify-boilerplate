@@ -18,12 +18,19 @@ export const registerControllers = (
 				const instanceController = new Controller();
 
 				for (const mtdFn of methodFunctions) {
+					const { statusCode, ...routeOptions } = mtdFn.options || {};
 					fastifyPlugin.route({
 						method: mtdFn.method,
 						url: mtdFn.path || '/',
-						handler: async (req, reply) =>
-							instanceController[mtdFn.methodName](req, reply),
-						...mtdFn.options,
+						handler: async (req, reply) => {
+							if (statusCode) reply.status(statusCode);
+							const res = await instanceController[mtdFn.methodName](
+								req,
+								reply
+							);
+							return res;
+						},
+						...routeOptions,
 					});
 				}
 			},

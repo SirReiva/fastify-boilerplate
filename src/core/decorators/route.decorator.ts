@@ -1,6 +1,10 @@
 import { RouteShorthandOptions } from 'fastify';
 import { ROUTING_METHODS } from '../constants';
 
+type RouteOptions = RouteShorthandOptions & {
+	statusCode?: number;
+};
+
 export enum RequestMethod {
 	GET = 'GET',
 	POST = 'POST',
@@ -19,14 +23,14 @@ const defaultMetadata: RequestMappingMetadata = {
 export interface RequestMappingMetadata {
 	path?: string;
 	method?: RequestMethod;
-	options?: RouteShorthandOptions;
+	options?: RouteOptions;
 }
 
 export interface RequestMappingMethodMetadata {
 	path?: string;
 	method: RequestMethod;
 	methodName: string | symbol;
-	options?: RouteShorthandOptions;
+	options?: RouteOptions;
 }
 
 export const RequestMapping = (
@@ -55,7 +59,7 @@ export const RequestMapping = (
 
 const createMappingDecorator =
 	(method: RequestMethod) =>
-	(path?: string, options?: RouteShorthandOptions): MethodDecorator => {
+	(path?: string, options?: RouteOptions): MethodDecorator => {
 		return RequestMapping({
 			path,
 			method,

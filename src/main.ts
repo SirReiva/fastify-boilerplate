@@ -1,13 +1,22 @@
-import 'reflect-metadata';
 import Fastify from 'fastify';
+import fastifyEnv, { fastifyEnvOpt } from 'fastify-env';
+import swagger, { SwaggerOptions } from 'fastify-swagger';
+import 'reflect-metadata';
+import { EnvConfig } from './config/env';
+import { AuthController } from './controllers/auth.controller';
 import { TodoController } from './controllers/todo.controller';
 import { registerControllers } from './core';
-import swagger, { SwaggerOptions } from 'fastify-swagger';
-import { AuthController } from './controllers/auth.controller';
 
 const fastify = Fastify({
 	logger: false,
 });
+
+const envOpts: fastifyEnvOpt = {
+	schema: EnvConfig,
+	dotenv: true,
+};
+
+fastify.register(fastifyEnv, envOpts);
 
 const swggerOptions: SwaggerOptions = {
 	exposeRoute: true,
@@ -33,14 +42,12 @@ fastify.setErrorHandler((err, _req, reply) => {
 	reply.status(err.statusCode || 500).send(err);
 });
 
-const start = async () => {
+fastify.ready(async () => {
 	try {
-		console.log('Listen http://localhost:3000');
-		await fastify.listen(3000);
+		console.log(`Listen http://localhost:3000`);
+		//@ts-ignore
+		await fastify.listen(fastify.config.PORT);
 	} catch (error) {
-		fastify.log.error(error);
-		process.exit(1);
+		console.log(error);
 	}
-};
-
-start();
+});

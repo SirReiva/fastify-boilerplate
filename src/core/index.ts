@@ -1,10 +1,11 @@
 import { FastifyInstance } from 'fastify';
 import { PATH_PREFIX_METADATA, ROUTING_METHODS } from './constants';
 import { RequestMappingMethodMetadata } from './decorators/route.decorator';
+import { Type } from './interfaces';
 
 export const registerControllers = (
 	fastify: FastifyInstance,
-	...controllers: any[]
+	...controllers: Type[]
 ) => {
 	controllers.forEach(Controller => {
 		const prefix: string =

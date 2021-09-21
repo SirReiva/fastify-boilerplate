@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import fastifyEnv, { fastifyEnvOpt } from 'fastify-env';
+import metricsPlugin from 'fastify-metrics';
 import swagger, { SwaggerOptions } from 'fastify-swagger';
 import 'reflect-metadata';
 import { EnvConfig } from './config/env';
@@ -7,7 +8,7 @@ import { AuthController } from './controllers/auth.controller';
 import { TodoController } from './controllers/todo.controller';
 import { registerControllers } from './core';
 
-const fastify = Fastify({
+const app = Fastify({
 	logger: false,
 });
 
@@ -16,7 +17,7 @@ const envOpts: fastifyEnvOpt = {
 	dotenv: true,
 };
 
-fastify.register(fastifyEnv, envOpts);
+app.register(fastifyEnv, envOpts);
 
 const swggerOptions: SwaggerOptions = {
 	exposeRoute: true,
@@ -34,19 +35,21 @@ const swggerOptions: SwaggerOptions = {
 	},
 };
 
-fastify.register(swagger, swggerOptions);
+app.register(swagger, swggerOptions);
 
-registerControllers(fastify, TodoController, AuthController);
+app.register(metricsPlugin, { endpoint: '/metrics' });
 
-fastify.setErrorHandler((err, _req, reply) => {
+registerControllers(app, TodoController, AuthController);
+
+app.setErrorHandler((err, _req, reply) => {
 	reply.status(err.statusCode || 500).send(err);
 });
 
-fastify.ready(async () => {
+app.ready(async () => {
 	try {
 		console.log(`Listen http://localhost:3000`);
 		//@ts-ignore
-		await fastify.listen(fastify.config.PORT);
+		await app.listen(app.config.PORT);
 	} catch (error) {
 		console.log(error);
 	}

@@ -6,6 +6,9 @@ export const TodoDTO = Type.Object({
 	id: Type.String(),
 });
 
-export const TodoArray = Type.Array(TodoDTO);
+export const TodoList = Type.Object({
+	data: Type.Array(TodoDTO),
+	size: Type.Integer({ minimum: 0 }),
+});
 
 export type TodoDTOType = Static<typeof TodoDTO>;

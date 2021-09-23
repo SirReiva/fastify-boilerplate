@@ -1,11 +1,11 @@
 import { FastifyRequest } from 'fastify';
 import uuid from 'uuid-random';
-import { Controller } from '../core/decorators/controller.decorator';
-import { Get, Post } from '../core/decorators/route.decorator';
+import { Controller } from '../../core/decorators/controller.decorator';
+import { Get, Post } from '../../core/decorators/route.decorator';
 import { CreateTodoDTO, CreateTodoDTOType } from '../dto/create-todo.dto';
 import { GetByIDTodoDTO, GetByIdTodoDTOType } from '../dto/get-todo-by-id.dto';
 import { PaginationDTO, PaginationDTOType } from '../dto/pagination.dto';
-import { TodoArray, TodoDTO } from '../dto/todo.dto';
+import { TodoList, TodoDTO } from '../dto/todo.dto';
 import { NotFoundError } from '../errors';
 import { JWTGuard } from '../middlewares/jwt.middleware';
 
@@ -45,14 +45,18 @@ export class TodoController {
 			],
 			querystring: PaginationDTO,
 			response: {
-				200: TodoArray,
+				200: TodoList,
 			},
 		},
 		preHandler: JWTGuard,
 	})
 	list(req: FastifyRequest<{ Querystring: PaginationDTOType }>) {
-		return TODOS_LIST.slice(req.query.skip, req.query.skip + req.query.limit);
+		return {
+			data: TODOS_LIST.slice(req.query.skip, req.query.skip + req.query.limit),
+			size: TODOS_LIST.length,
+		};
 	}
+
 	@Post('/', {
 		schema: {
 			tags: ['todo'],

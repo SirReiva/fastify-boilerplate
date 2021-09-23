@@ -1,16 +1,32 @@
-import Fastify from 'fastify';
+import fastifyRequestLogger from '@mgcrea/fastify-request-logger';
+import prettifier from '@mgcrea/pino-pretty-compact';
+import Fastify, { FastifyServerFactory } from 'fastify';
 import fastifyEnv, { fastifyEnvOpt } from 'fastify-env';
 import metricsPlugin from 'fastify-metrics';
 import swagger, { SwaggerOptions } from 'fastify-swagger';
+import { createServer } from 'http';
 import 'reflect-metadata';
 import { EnvConfig } from './config/env';
-import { AuthController } from './controllers/auth.controller';
-import { TodoController } from './controllers/todo.controller';
+import { AuthController } from './infrastructure/controllers/auth.controller';
+import { TodoController } from './infrastructure/controllers/todo.controller';
 import { registerControllers } from './core';
+import { Http } from '@status/codes';
+
+const serverFactory: FastifyServerFactory = (handler, _opts) => {
+	const server = createServer((req, res) => {
+		handler(req, res);
+	});
+
+	return server;
+};
 
 const app = Fastify({
-	logger: false,
+	logger: { prettyPrint: true, prettifier },
+	disableRequestLogging: true,
+	serverFactory,
 });
+
+app.register(fastifyRequestLogger);
 
 const envOpts: fastifyEnvOpt = {
 	schema: EnvConfig,
@@ -22,6 +38,11 @@ app.register(fastifyEnv, envOpts);
 const swggerOptions: SwaggerOptions = {
 	exposeRoute: true,
 	routePrefix: '/docs',
+	uiConfig: {
+		syntaxHighlight: {
+			activate: true,
+		},
+	},
 	swagger: {
 		info: { title: 'fastify-api', version: '0' },
 		tags: [{ name: 'todo', description: 'Todo Endpoints' }],
@@ -42,7 +63,7 @@ app.register(metricsPlugin, { endpoint: '/metrics' });
 registerControllers(app, TodoController, AuthController);
 
 app.setErrorHandler((err, _req, reply) => {
-	reply.status(err.statusCode || 500).send(err);
+	reply.status(err.statusCode || Http.InternalServerError).send(err);
 });
 
 app.ready(async () => {

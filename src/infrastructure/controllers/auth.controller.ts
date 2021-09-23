@@ -1,9 +1,9 @@
 import { FastifyRequest } from 'fastify';
-import { Controller } from '../core/decorators/controller.decorator';
-import { Post } from '../core/decorators/route.decorator';
+import { Controller } from '../../core/decorators/controller.decorator';
+import { Post } from '../../core/decorators/route.decorator';
 import { JWTDTO, LoginDTO, LoginDTOType } from '../dto/login.dto';
 import { UnAuthorizedError } from '../errors';
-import { signJWT } from '../utils/jwt.utils';
+import { signJWT } from '../../utils/jwt.utils';
 
 const USER = {
 	name: 'test',

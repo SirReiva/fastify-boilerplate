@@ -7,10 +7,14 @@ import swagger, { SwaggerOptions } from 'fastify-swagger';
 import { createServer } from 'http';
 import 'reflect-metadata';
 import { EnvConfig } from './config/env';
-import { AuthController } from './infrastructure/controllers/auth.controller';
-import { TodoController } from './infrastructure/controllers/todo.controller';
 import { registerControllers } from './core';
 import { Http } from '@status/codes';
+import { install } from 'source-map-support';
+import { TodoController } from './infrastructure/controllers/todo.controller';
+import { AuthController } from './infrastructure/controllers/auth.controller';
+import { diContainer } from './container';
+
+install({ environment: 'node', });
 
 const serverFactory: FastifyServerFactory = (handler, _opts) => {
 	const server = createServer((req, res) => {
@@ -31,6 +35,7 @@ app.register(fastifyRequestLogger);
 const envOpts: fastifyEnvOpt = {
 	schema: EnvConfig,
 	dotenv: true,
+
 };
 
 app.register(fastifyEnv, envOpts);
@@ -60,7 +65,7 @@ app.register(swagger, swggerOptions);
 
 app.register(metricsPlugin, { endpoint: '/metrics' });
 
-registerControllers(app, TodoController, AuthController);
+registerControllers(diContainer, app, TodoController, AuthController);
 
 app.setErrorHandler((err, _req, reply) => {
 	reply.status(err.statusCode || Http.InternalServerError).send(err);

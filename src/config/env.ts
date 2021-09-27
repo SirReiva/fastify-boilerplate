@@ -1,10 +1,9 @@
-export const EnvConfig = {
-	type: 'object',
-	required: ['PORT'],
-	properties: {
-		PORT: {
-			type: 'integer',
-			default: 3000,
-		},
-	},
-};
+import { Type } from '@sinclair/typebox';
+
+export const EnvConfig = Type.Strict(
+	Type.Object({
+		PORT: Type.Integer(),
+		SECRET: Type.String()
+	}),
+
+);

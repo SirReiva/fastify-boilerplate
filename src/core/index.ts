@@ -1,9 +1,11 @@
 import { FastifyInstance } from 'fastify';
+import { Container } from 'inversify';
 import { PATH_PREFIX_METADATA, ROUTING_METHODS } from './constants';
 import { RequestMappingMethodMetadata } from './decorators/route.decorator';
 import { Type } from './interfaces';
 
 export const registerControllers = (
+	diContainer: Container,
 	fastify: FastifyInstance,
 	...controllers: Type[]
 ) => {
@@ -14,9 +16,8 @@ export const registerControllers = (
 			async (fastifyPlugin: FastifyInstance) => {
 				const methodFunctions: RequestMappingMethodMetadata[] =
 					Reflect.getMetadata(ROUTING_METHODS, Controller) || [];
-
 				//DI resolve
-				const instanceController = new Controller();
+				const instanceController = diContainer.resolve(Controller);
 
 				for (const mtdFn of methodFunctions) {
 					const { statusCode, ...routeOptions } = mtdFn.options || {};

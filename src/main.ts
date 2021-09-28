@@ -1,20 +1,20 @@
 import fastifyRequestLogger from '@mgcrea/fastify-request-logger';
 import prettifier from '@mgcrea/pino-pretty-compact';
+import { Http } from '@status/codes';
 import Fastify, { FastifyServerFactory } from 'fastify';
 import fastifyEnv, { fastifyEnvOpt } from 'fastify-env';
 import metricsPlugin from 'fastify-metrics';
 import swagger, { SwaggerOptions } from 'fastify-swagger';
 import { createServer } from 'http';
 import 'reflect-metadata';
-import { EnvConfig } from './config/env';
-import { registerControllers } from './core';
-import { Http } from '@status/codes';
 import { install } from 'source-map-support';
-import { TodoController } from './infrastructure/controllers/todo.controller';
-import { AuthController } from './infrastructure/controllers/auth.controller';
+import { EnvConfig } from './config/env';
 import { diContainer } from './container';
+import { registerControllers } from './core';
+import { AuthController } from './infrastructure/controllers/auth.controller';
+import { TodoController } from './infrastructure/controllers/todo.controller';
 
-install({ environment: 'node', });
+install({ environment: 'node' });
 
 const serverFactory: FastifyServerFactory = (handler, _opts) => {
 	const server = createServer((req, res) => {
@@ -35,7 +35,6 @@ app.register(fastifyRequestLogger);
 const envOpts: fastifyEnvOpt = {
 	schema: EnvConfig,
 	dotenv: true,
-
 };
 
 app.register(fastifyEnv, envOpts);

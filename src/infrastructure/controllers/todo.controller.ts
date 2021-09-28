@@ -6,7 +6,10 @@ import { Get, Post } from '../../core/decorators/route.decorator';
 import { NotFoundError } from '../../core/errors';
 import { JWTGuard } from '../../core/middlewares/jwt.middleware';
 import { TodoModel } from '../../domain/todo.model';
-import { ITodoRepository, TokenTodoRepository } from '../../domain/todo.repository';
+import {
+	ITodoRepository,
+	TokenTodoRepository,
+} from '../../domain/todo.repository';
 import { CreateTodoDTO, CreateTodoDTOType } from '../dto/create-todo.dto';
 import { GetByIDTodoDTO, GetByIdTodoDTOType } from '../dto/get-todo-by-id.dto';
 import { PaginationDTO, PaginationDTOType } from '../dto/pagination.dto';
@@ -14,10 +17,10 @@ import { TodoDTO, TodoList } from '../dto/todo.dto';
 
 @Controller('todos')
 export class TodoController {
-
 	constructor(
 		@inject(TokenTodoRepository)
-		private readonly todoRepo: ITodoRepository) { }
+		private readonly todoRepo: ITodoRepository
+	) {}
 
 	@Get('/:id', {
 		schema: {
@@ -57,7 +60,7 @@ export class TodoController {
 		preHandler: JWTGuard,
 	})
 	list(req: FastifyRequest<{ Querystring: PaginationDTOType }>) {
-		return this.todoRepo.list(req.query.skip, req.query.limit)
+		return this.todoRepo.list(req.query.skip, req.query.limit);
 	}
 
 	@Post('/', {

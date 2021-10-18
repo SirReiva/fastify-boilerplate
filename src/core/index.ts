@@ -30,7 +30,6 @@ export const registerControllers = (
 								req,
 								reply
 							);
-							console.log();
 							if (!reply.sent) return res;
 						},
 						...routeOptions,

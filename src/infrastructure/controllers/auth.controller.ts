@@ -3,7 +3,12 @@ import { Controller } from '../../core/decorators/controller.decorator';
 import { Post } from '../../core/decorators/route.decorator';
 import { UnAuthorizedError } from '../../core/errors';
 import { signJWT } from '../../utils/jwt.utils';
-import { JWTDTO, LoginDTO, LoginDTOType } from '../dto/login.dto';
+import {
+	LoginReponseDTO,
+	LoginDTO,
+	LoginDTOType,
+	LoginReponseDTOType,
+} from '../dto/login.dto';
 
 const USER = {
 	name: 'test',
@@ -17,11 +22,13 @@ export class AuthController {
 			tags: ['auth'],
 			body: LoginDTO,
 			response: {
-				200: JWTDTO,
+				200: LoginReponseDTO,
 			},
 		},
 	})
-	async login({ body }: FastifyRequest<{ Body: LoginDTOType }>) {
+	async login({
+		body,
+	}: FastifyRequest<{ Body: LoginDTOType }>): Promise<LoginReponseDTOType> {
 		const { name, password } = body;
 		if (name !== USER.name || password !== USER.password)
 			throw new UnAuthorizedError();

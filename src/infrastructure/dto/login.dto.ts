@@ -5,8 +5,9 @@ export const LoginDTO = Type.Object({
 	password: Type.String(),
 });
 
-export const JWTDTO = Type.Object({
+export const LoginReponseDTO = Type.Object({
 	token: Type.String(),
 });
 
 export type LoginDTOType = Static<typeof LoginDTO>;
+export type LoginReponseDTOType = Static<typeof LoginReponseDTO>;

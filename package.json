@@ -15,7 +15,7 @@
 		"@types/node": "16.11.14",
 		"@types/source-map-support": "^0.5.4",
 		"rimraf": "^3.0.2",
-		"tsc-watch": "^4.5.0",
+		"tsc-watch": "4.6.0",
 		"typescript": "4.5.4"
 	},
 	"dependencies": {

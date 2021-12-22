@@ -70,8 +70,9 @@ app.setErrorHandler((err, _req, reply) => {
 	reply.status(err.statusCode || Http.InternalServerError).send(err);
 });
 
-app.ready(async () => {
+app.ready(async err => {
 	try {
+		if (err) throw err;
 		console.log(`Listen http://localhost:3000`);
 		//@ts-ignore
 		await app.listen(app.config.PORT);

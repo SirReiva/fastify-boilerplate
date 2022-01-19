@@ -13,6 +13,7 @@ import { diContainer } from './container';
 import { registerControllers } from './core';
 import { AuthController } from './infrastructure/controllers/auth.controller';
 import { TodoController } from './infrastructure/controllers/todo.controller';
+import statusPlugin from 'fastify-status';
 
 install({ environment: 'node' });
 
@@ -60,6 +61,11 @@ const swggerOptions: SwaggerOptions = {
 	},
 };
 
+app.register(statusPlugin, {
+	info: '/__info__',
+	alive: '/__alive__',
+});
+
 app.register(swagger, swggerOptions);
 
 app.register(metricsPlugin, { endpoint: '/metrics' });
@@ -74,7 +80,6 @@ app.ready(async err => {
 	try {
 		if (err) throw err;
 		console.log(`Listen http://localhost:3000`);
-		//@ts-ignore
 		await app.listen(app.config.PORT);
 	} catch (error) {
 		console.log(error);

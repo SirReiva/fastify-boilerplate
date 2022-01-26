@@ -4,8 +4,11 @@ import { Http } from '@status/codes';
 import Fastify, { FastifyServerFactory } from 'fastify';
 import fastifyEnv, { fastifyEnvOpt } from 'fastify-env';
 import metricsPlugin from 'fastify-metrics';
+import fastifyStatic, { FastifyStaticOptions } from 'fastify-static';
+import statusPlugin from 'fastify-status';
 import swagger, { SwaggerOptions } from 'fastify-swagger';
 import { createServer } from 'http';
+import { resolve } from 'path';
 import 'reflect-metadata';
 import { install } from 'source-map-support';
 import { EnvConfig } from './config/env';
@@ -13,7 +16,6 @@ import { diContainer } from './container';
 import { registerControllers } from './core';
 import { AuthController } from './infrastructure/controllers/auth.controller';
 import { TodoController } from './infrastructure/controllers/todo.controller';
-import statusPlugin from 'fastify-status';
 
 install({ environment: 'node' });
 
@@ -69,6 +71,15 @@ app.register(statusPlugin, {
 app.register(swagger, swggerOptions);
 
 app.register(metricsPlugin, { endpoint: '/metrics' });
+
+const staticOptions: FastifyStaticOptions = {
+	root: resolve(__dirname, '../public'),
+	prefix: '/public/',
+	wildcard: true,
+	redirect: false,
+};
+
+app.register(fastifyStatic, staticOptions);
 
 registerControllers(diContainer, app, TodoController, AuthController);
 

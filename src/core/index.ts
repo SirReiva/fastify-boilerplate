@@ -1,6 +1,5 @@
 import { FastifyInstance } from 'fastify';
 import { Container } from 'inversify';
-import { isAsyncFunction } from 'util/types';
 import { PATH_PREFIX_METADATA, ROUTING_METHODS } from './constants';
 import { RequestMappingMethodMetadata } from './decorators/route.decorator';
 import { Type } from './interfaces';
@@ -28,9 +27,7 @@ export const registerControllers = (
 						url: mtdFn.path || '/',
 						handler: async (req, reply) => {
 							if (statusCode) reply.status(statusCode);
-							const res = isAsyncFunction(instanceController[mtdFn.methodName])
-								? await instanceController[mtdFn.methodName](req, reply)
-								: instanceController[mtdFn.methodName](req, reply);
+							const res = instanceController[mtdFn.methodName](req, reply);
 							const result = isPromise(res) ? await res : res;
 							if (!reply.sent) return result;
 						},

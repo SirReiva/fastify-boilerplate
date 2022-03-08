@@ -16,7 +16,7 @@
 		"@types/source-map-support": "^0.5.4",
 		"rimraf": "^3.0.2",
 		"tsc-watch": "^4.6.0",
-		"typescript": "^4.5.5"
+		"typescript": "4.6.2"
 	},
 	"dependencies": {
 		"@mgcrea/fastify-request-logger": "^0.5.2",
@@ -26,11 +26,11 @@
 		"bcrypt": "^5.0.1",
 		"fastify": "^3.27.0",
 		"fastify-env": "^2.1.1",
-		"fastify-error": "^0.3.1",
+		"fastify-error": "^1.0.0",
 		"fastify-metrics": "^8.0.0",
 		"fastify-static": "^4.5.0",
 		"fastify-status": "^2.2.1",
-		"fastify-swagger": "^4.13.1",
+		"fastify-swagger": "^5.0.0",
 		"inversify": "^6.0.0",
 		"is-promise": "^4.0.0",
 		"jsonwebtoken": "^8.5.1",

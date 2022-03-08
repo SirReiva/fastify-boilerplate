@@ -30,7 +30,7 @@
 		"fastify-metrics": "^8.0.0",
 		"fastify-static": "^4.5.0",
 		"fastify-status": "^2.2.1",
-		"fastify-swagger": "^4.13.1",
+		"fastify-swagger": "^5.0.0",
 		"inversify": "^6.0.0",
 		"jsonwebtoken": "^8.5.1",
 		"reflect-metadata": "^0.1.13",

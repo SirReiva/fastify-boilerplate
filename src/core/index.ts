@@ -4,6 +4,7 @@ import { isAsyncFunction } from 'util/types';
 import { PATH_PREFIX_METADATA, ROUTING_METHODS } from './constants';
 import { RequestMappingMethodMetadata } from './decorators/route.decorator';
 import { Type } from './interfaces';
+import isPromise from 'is-promise';
 
 export const registerControllers = (
 	diContainer: Container,
@@ -30,7 +31,8 @@ export const registerControllers = (
 							const res = isAsyncFunction(instanceController[mtdFn.methodName])
 								? await instanceController[mtdFn.methodName](req, reply)
 								: instanceController[mtdFn.methodName](req, reply);
-							if (!reply.sent) return res;
+							const result = isPromise(res) ? await res : res;
+							if (!reply.sent) return result;
 						},
 						...routeOptions,
 					});

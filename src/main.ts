@@ -2,11 +2,11 @@ import fastifyRequestLogger from '@mgcrea/fastify-request-logger';
 import prettifier from '@mgcrea/pino-pretty-compact';
 import { Http } from '@status/codes';
 import Fastify, { FastifyServerFactory } from 'fastify';
-import fastifyEnv, { fastifyEnvOpt } from 'fastify-env';
+import fastifyEnv, { fastifyEnvOpt } from '@fastify/env';
 import metricsPlugin from 'fastify-metrics';
-import fastifyStatic, { FastifyStaticOptions } from 'fastify-static';
+import fastifyStatic, { FastifyStaticOptions } from '@fastify/static';
 import statusPlugin from 'fastify-status';
-import swagger, { SwaggerOptions } from 'fastify-swagger';
+import swagger, { SwaggerOptions } from '@fastify/swagger';
 import { createServer } from 'http';
 import { resolve } from 'path';
 import 'reflect-metadata';
@@ -16,6 +16,7 @@ import { diContainer } from './container';
 import { registerControllers } from './core';
 import { AuthController } from './infrastructure/controllers/auth.controller';
 import { TodoController } from './infrastructure/controllers/todo.controller';
+import { PluginOptions as MetricsPluginOptions } from 'fastify-metrics/dist/plugin';
 
 install({ environment: 'node' });
 
@@ -70,7 +71,10 @@ app.register(statusPlugin, {
 
 app.register(swagger, swggerOptions);
 
-app.register(metricsPlugin, { endpoint: '/metrics' });
+const metricsOptions: MetricsPluginOptions = {
+	endpoint: '/metrics',
+};
+app.register(metricsPlugin, metricsOptions);
 
 const staticOptions: FastifyStaticOptions = {
 	root: resolve(__dirname, '../public'),

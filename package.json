@@ -23,7 +23,7 @@
 		"@fastify/error": "^3.0.0",
 		"@fastify/static": "^6.0.0",
 		"@fastify/swagger": "^7.0.0",
-		"@mgcrea/fastify-request-logger": "^0.5.2",
+		"@mgcrea/fastify-request-logger": "^0.6.0",
 		"@mgcrea/pino-pretty-compact": "^0.5.0",
 		"@sinclair/typebox": "^0.23.5",
 		"@status/codes": "^1.6.2",

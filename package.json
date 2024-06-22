@@ -20,7 +20,7 @@
 	},
 	"dependencies": {
 		"@fastify/env": "^4.0.0",
-		"@fastify/error": "^3.0.0",
+		"@fastify/error": "^4.0.0",
 		"@fastify/static": "^7.0.0",
 		"@fastify/swagger": "^8.0.0",
 		"@mgcrea/fastify-request-logger": "^1.0.0",

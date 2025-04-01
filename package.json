@@ -12,7 +12,7 @@
 	"devDependencies": {
 		"@types/bcrypt": "^5.0.0",
 		"@types/jsonwebtoken": "9.0.9",
-		"@types/node": "22.13.14",
+		"@types/node": "22.13.16",
 		"@types/source-map-support": "0.5.10",
 		"rimraf": "^6.0.0",
 		"tsc-watch": "6.2.1",
